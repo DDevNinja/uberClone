@@ -1,13 +1,15 @@
-const mongoose = require('mongoose');
-require('dotenv').config();
-const mongoURL = process.env.MONGODB_URL || 'mongodb://localhost:27017/ubar-clone';
 
-mongoose.connect(mongoURL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-}).then(() => { 
-    console.log('Connected to MongoDB');
-}).catch((err) => {
-    console.error('Error connecting to MongoDB:', err);
-});
-module.exports = mongoose;
+const mongoose = require("mongoose");
+
+function connectToDb() {
+  try {
+    mongoose.connect(process.env.MONGO_URI);
+    console.log("✅ MongoDB connected");
+  } catch (error) {
+    console.error("❌ MongoDB connection error", error);
+    process.exit(1);
+  }
+}
+
+module.exports = { connectToDb };
+
