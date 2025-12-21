@@ -1,4 +1,3 @@
-
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -15,12 +14,10 @@ connectToDb();
 app.use(cors());
 app.use(express.json());
 
-// ❌ WRONG: app.post("/users", userRoutes);
-// ✅ CORRECT:
 app.use("/users", userRoutes);
 
 app.get("/", (req, res) => {
-  res.send("Ubar Clone Backend is running");
+  res.send("Ubar Clone Backend Running 🚀");
 });
 
 module.exports = app;

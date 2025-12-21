@@ -1,5 +1,3 @@
-
-
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -33,8 +31,12 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-// 🔐 JWT
+/* 🔐 JWT */
 userSchema.methods.generateAuthToken = function () {
+  if (!process.env.JWT_SECRET) {
+    throw new Error("JWT_SECRET not defined");
+  }
+
   return jwt.sign(
     { _id: this._id, email: this.email },
     process.env.JWT_SECRET,
@@ -42,13 +44,13 @@ userSchema.methods.generateAuthToken = function () {
   );
 };
 
-// 🔍 compare password
+/* 🔍 Compare Password */
 userSchema.methods.comparePassword = async function (password) {
   return bcrypt.compare(password, this.password);
 };
 
-// 🔐 hash password
-userSchema.methods.hashPassword = async function (password) {
+/* 🔐 Hash Password */
+userSchema.statics.hashPassword = async function (password) {
   return bcrypt.hash(password, 10);
 };
 
