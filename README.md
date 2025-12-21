@@ -276,3 +276,129 @@ curl -X POST http://localhost:3000/users/login \
 ---
 
 If you'd like, I can add Postman examples or extract these docs into a dedicated API docs file. 👍
+
+---
+
+# GET /users/profile 👤
+
+## Description
+
+Returns the authenticated user's profile. Requires a valid JWT in the `Authorization` header.
+
+## Endpoint
+
+- **URL:** `/users/profile`
+- **Method:** `GET`
+- **Headers:** `Authorization: Bearer <token>`
+
+## Responses
+
+### 200 OK ✅
+
+Success. Returns `message` and the `user` object.
+
+Example:
+
+```json
+{
+  "message": "Profile fetched successfully",
+  "user": {
+    "_id": "64a1ea...",
+    "fullname": { "firstname": "John", "lastname": "Doe" },
+    "email": "john@example.com",
+    "socketId": null
+  }
+}
+```
+
+### 401 Unauthorized ⚠️
+
+Missing or invalid token. Example response:
+
+```json
+{ "message": "Not authorized" }
+```
+
+### 500 Internal Server Error ⚠️
+
+Server error. Example response:
+
+```json
+{ "message": "Server error" }
+```
+
+## Implementation notes 🔧
+
+- Endpoint uses `authUser` middleware which extracts and verifies the JWT and attaches the user to `req.user`.
+- The `Authorization` header must be set to `Bearer <token>`.
+
+## Example cURL
+
+```bash
+curl -X GET http://localhost:3000/users/profile \
+  -H "Authorization: Bearer <jwt_token>"
+```
+
+---
+
+If you'd like, I can also add this to the `Backend/docs` folder as a standalone file or create Postman examples. 👍
+
+---
+
+# POST /users/logout 🚪
+
+## Description
+
+Logs out the authenticated user. For JWT-based auth this is handled client-side by removing the token; the endpoint returns a confirmation message. Requires a valid JWT in the `Authorization` header.
+
+## Endpoint
+
+- **URL:** `/users/logout`
+- **Method:** `POST`
+- **Headers:** `Authorization: Bearer <token>`
+
+## Responses
+
+### 200 OK ✅
+
+Success. Returns a confirmation message.
+
+Example:
+
+```json
+{
+  "message": "Logout successful"
+}
+```
+
+### 401 Unauthorized ⚠️
+
+Missing or invalid token. Example response:
+
+```json
+{ "message": "Unauthorized" }
+```
+
+### 500 Internal Server Error ⚠️
+
+Server error. Example response:
+
+```json
+{ "message": "Server error" }
+```
+
+## Implementation notes 🔧
+
+- Because JWTs are stateless, the server does not invalidate tokens — the client should delete stored tokens to complete logout.
+- Endpoint is protected by `authUser` middleware which verifies the token.
+
+## Example cURL
+
+```bash
+curl -X POST http://localhost:3000/users/logout \
+  -H "Authorization: Bearer <jwt_token>"
+```
+
+---
+
+If you'd like, I can also add this to the `Backend/docs` folder as a standalone file or create Postman examples. 👍

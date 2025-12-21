@@ -47,7 +47,9 @@ const { body } = require("express-validator");
 const userController = require("../controllers/user.controller");
 
 const router = express.Router();
+const { authUser } = require("../middleware/auth.middleware.js");
 
+console.log("✅ user.routes.js loaded");
 router.post(
   "/register",
   [
@@ -72,5 +74,12 @@ router.post(
   ],
   userController.loginUser
 );
+
+// this is the profile route 
+router.get("/profile", authUser, userController.getUserProfile);
+
+// this is the logout route
+
+router.post("/logout", authUser, userController.logoutUser);
 
 module.exports = router;

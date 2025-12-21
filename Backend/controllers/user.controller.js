@@ -143,3 +143,30 @@ module.exports.loginUser = async (req, res) => {
   }
 };
 
+
+
+/* ================= PROFILE ================= */
+module.exports.getUserProfile = async (req, res) => {
+  try {
+    res.status(200).json({
+      message: "Profile fetched successfully",
+      user: req.user,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+/* ================= LOGOUT ================= */
+module.exports.logoutUser = async (req, res) => {
+  try {
+    // For JWT, logout is handled on frontend by deleting token
+    res.status(200).json({
+      message: "Logout successful",
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
