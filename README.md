@@ -402,3 +402,125 @@ curl -X POST http://localhost:3000/users/logout \
 ---
 
 If you'd like, I can also add this to the `Backend/docs` folder as a standalone file or create Postman examples. 👍
+
+---
+
+# POST /captains/register 🚘
+
+## Description
+
+Registers a new captain (driver). The endpoint validates the input, hashes the password, saves the captain to the database, and returns a JWT token along with the created captain (password is not returned).
+
+## Endpoint
+
+- **URL:** `/captains/register`
+- **Method:** `POST`
+- **Headers:** `Content-Type: application/json`
+
+## Request body (JSON)
+
+Example:
+
+```json
+{
+  "fullname": { "firstname": "Jane", "lastname": "Doe" },
+  "email": "jane@example.com",
+  "password": "secret123",
+  "vehicle": {
+    "color": "red",
+    "plate": "ABC-123",
+    "capacity": 4,
+    "vehicleType": "car"
+  }
+}
+```
+
+Required fields and validation rules:
+
+- `fullname.firstname` (string) — **required**, minimum **3** characters ✅
+- `fullname.lastname` (string) — optional, minimum **3** characters ⚠️
+- `email` (string) — **required**, must be a valid email ✅
+- `password` (string) — **required**, minimum **6** characters ✅
+- `vehicle.color` (string) — **required**, minimum **3** characters ✅
+- `vehicle.plate` (string) — **required**, minimum **3** characters ✅
+- `vehicle.capacity` (number) — **required**, minimum **1** ✅
+- `vehicle.vehicleType` (string) — **required**, must be one of `car`, `motorcycle`, `auto` ✅
+
+> Note: Validation is performed with `express-validator` and validation errors are returned with a `400` status.
+
+## Responses
+
+### 201 Created ✅
+
+Success. Returns a JWT token and the created captain (password omitted).
+
+Example:
+
+```json
+{
+  "token": "<jwt_token>",
+  "captain": {
+    "_id": "64b2ea...",
+    "fullname": { "firstname": "Jane", "lastname": "Doe" },
+    "email": "jane@example.com",
+    "vehicle": {
+      "color": "red",
+      "plate": "ABC-123",
+      "capacity": 4,
+      "vehicleType": "car"
+    },
+    "socketId": null,
+    "status": "unavailable"
+  }
+}
+```
+
+### 400 Bad Request ⚠️
+
+Validation failed or email already exists. Returns an `errors` array or a message.
+
+Example (validation errors):
+
+```json
+{
+  "errors": [
+    {
+      "msg": "Firstname required",
+      "param": "fullname.firstname",
+      "location": "body"
+    }
+  ]
+}
+```
+
+Example (duplicate email):
+
+```json
+{ "message": "Email already exists" }
+```
+
+### 500 Internal Server Error ⚠️
+
+Server error (e.g., DB error). Example response:
+
+```json
+{ "message": "Server error" }
+```
+
+## Implementation notes 🔧
+
+- Passwords are hashed before being saved using `Captain.hashPassword`.
+- JWTs are signed using `process.env.JWT_SECRET` with a 1-hour expiry and returned on successful registration.
+- Validation is handled with `express-validator` in the route and verified in the controller using `validationResult`.
+
+## Example cURL
+
+```bash
+curl -X POST http://localhost:3000/captains/register \
+  -H "Content-Type: application/json" \
+  -d '{"fullname":{"firstname":"Jane","lastname":"Doe"},"email":"jane@example.com","password":"secret123","vehicle":{"color":"red","plate":"ABC-123","capacity":4,"vehicleType":"car"}}'
+```
+
+---
+
+If you'd like, I can also extract these captain docs into a new `Backend/docs/captains-register.md` file or generate Postman examples. 👍
