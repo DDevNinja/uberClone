@@ -524,3 +524,221 @@ curl -X POST http://localhost:3000/captains/register \
 ---
 
 If you'd like, I can also extract these captain docs into a new `Backend/docs/captains-register.md` file or generate Postman examples. 👍
+
+---
+
+# POST /captains/login 🔑
+
+## Description
+
+Authenticates a captain. The endpoint validates the input, verifies the captain's credentials, and returns a JWT token and the captain (password omitted) on success.
+
+## Endpoint
+
+- **URL:** `/captains/login`
+- **Method:** `POST`
+- **Headers:** `Content-Type: application/json`
+
+## Request body (JSON)
+
+Example:
+
+```json
+{
+  "email": "jane@example.com",
+  "password": "secret123"
+}
+```
+
+Required fields and validation rules:
+
+- `email` (string) — **required**, must be a valid email ✅
+- `password` (string) — **required**, minimum **6** characters ✅
+
+> Note: Validation is performed with `express-validator`. Validation errors are returned with a `400` status.
+
+## Responses
+
+### 200 OK ✅
+
+Success. Returns a `message`, a JWT `token`, and the authenticated `captain` (password omitted).
+
+Example:
+
+```json
+{
+  "message": "Login successful",
+  "token": "<jwt_token>",
+  "captain": {
+    "_id": "64b2ea...",
+    "fullname": { "firstname": "Jane", "lastname": "Doe" },
+    "email": "jane@example.com",
+    "vehicle": {
+      "color": "red",
+      "plate": "ABC-123",
+      "capacity": 4,
+      "vehicleType": "car"
+    },
+    "socketId": null,
+    "status": "unavailable"
+  }
+}
+```
+
+### 400 Bad Request ⚠️
+
+Invalid credentials or validation failed. Example response:
+
+```json
+{ "message": "Invalid email or password" }
+```
+
+### 500 Internal Server Error ⚠️
+
+Server error. Example response:
+
+```json
+{ "message": "Server error" }
+```
+
+## Implementation notes 🔧
+
+- Passwords are compared using the model's `comparePassword` method (bcrypt).
+- JWTs are signed using `process.env.JWT_SECRET` with a 1-hour expiry.
+- Validation is handled with `express-validator` in the route.
+
+## Example cURL
+
+```bash
+curl -X POST http://localhost:3000/captains/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"jane@example.com","password":"secret123"}'
+```
+
+---
+
+# GET /captains/profile 👤
+
+## Description
+
+Returns the authenticated captain's profile. Requires a valid JWT in the `Authorization` header.
+
+## Endpoint
+
+- **URL:** `/captains/profile`
+- **Method:** `GET`
+- **Headers:** `Authorization: Bearer <token>`
+
+## Responses
+
+### 200 OK ✅
+
+Success. Returns the `captain` object.
+
+Example:
+
+```json
+{
+  "captain": {
+    "_id": "64b2ea...",
+    "fullname": { "firstname": "Jane", "lastname": "Doe" },
+    "email": "jane@example.com",
+    "vehicle": {
+      "color": "red",
+      "plate": "ABC-123",
+      "capacity": 4,
+      "vehicleType": "car"
+    },
+    "socketId": null,
+    "status": "unavailable"
+  }
+}
+```
+
+### 401 Unauthorized ⚠️
+
+Missing or invalid token. Example response:
+
+```json
+{ "message": "Unauthorized" }
+```
+
+### 500 Internal Server Error ⚠️
+
+Server error. Example response:
+
+```json
+{ "message": "Server error" }
+```
+
+## Implementation notes 🔧
+
+- Endpoint uses `authCaptain` middleware which verifies the JWT and attaches the decoded payload to `req.captain`.
+- The `Authorization` header must be set to `Bearer <token>`.
+
+## Example cURL
+
+```bash
+curl -X GET http://localhost:3000/captains/profile \
+  -H "Authorization: Bearer <jwt_token>"
+```
+
+---
+
+# POST /captains/logout 🚪
+
+## Description
+
+Logs out the authenticated captain. Clears the captain's `socketId` from the database and returns a confirmation message. Requires a valid JWT in the `Authorization` header.
+
+## Endpoint
+
+- **URL:** `/captains/logout`
+- **Method:** `POST`
+- **Headers:** `Authorization: Bearer <token>`
+
+## Responses
+
+### 200 OK ✅
+
+Success. Returns a confirmation message.
+
+Example:
+
+```json
+{
+  "message": "Logout successful"
+}
+```
+
+### 401 Unauthorized ⚠️
+
+Missing or invalid token. Example response:
+
+```json
+{ "message": "Unauthorized" }
+```
+
+### 500 Internal Server Error ⚠️
+
+Server error. Example response:
+
+```json
+{ "message": "Server error" }
+```
+
+## Implementation notes 🔧
+
+- Endpoint is protected by `authCaptain` middleware which verifies the token.
+- On logout, the captain's `socketId` is cleared (set to `null`) in the database.
+
+## Example cURL
+
+```bash
+curl -X POST http://localhost:3000/captains/logout \
+  -H "Authorization: Bearer <jwt_token>"
+```
+
+---
+
+If you'd like, I can also extract these captain docs into standalone files or generate Postman examples. 👍

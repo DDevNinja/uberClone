@@ -92,3 +92,57 @@ module.exports.registerCaptain = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+// 2)captain login controller
+module.exports.loginCaptain = async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { email, password } = req.body;
+
+    const captain = await Captain.findOne({ email }).select("+password");
+    if (!captain) {
+      return res.status(400).json({ message: "Invalid email or password" });
+    }
+
+    const isMatch = await captain.comparePassword(password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid email or password" });
+    }
+
+    const token = captain.generateAuthToken();
+
+    res.status(200).json({
+      message: "Login successful",
+      token,
+      captain,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+/* ================= CAPTAIN PROFILE ================= */
+module.exports.getCaptainProfile = async (req, res) => {
+  try {
+    res.status(200).json({
+      captain: req.captain,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+/* ================= LOGOUT ================= */
+module.exports.logoutCaptain = async (req, res) => {
+  try {
+    await Captain.findByIdAndUpdate(req.captain._id, { socketId: null });
+    res.status(200).json({ message: "Logout successful" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
