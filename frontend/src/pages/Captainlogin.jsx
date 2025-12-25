@@ -98,7 +98,19 @@ const Captainlogin = () => {
       >
         Sign in as User
       </Link>
+      <p className="text-xs text-center">
+              This site is protected by reCAPTCHA and the Google{" "}
+              <Link className="text-blue-600 underline" to="/privacy-policy">
+                Privacy Policy
+              </Link>{" "}
+              and{" "}
+              <Link className="text-blue-600 underline" to="/privacy-policy">
+                Terms of Service
+              </Link>{" "}
+              apply.
+            </p>
     </div>
+    
   );
 };
 

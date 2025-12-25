@@ -37,6 +37,7 @@ const App = () => {
 
 
       </Routes>
+      {/* very important logic and animation in home.jsx file  */}
     </div>
   );
 };
