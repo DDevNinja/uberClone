@@ -1,27 +1,20 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
-const WaitForDriver = (props) => {
+const Riding = () => {
   return (
-    <div>
-      <h5
-        onClick={() => {
-          props.setvechiclepanelopen(false),
-            props.setformpanelopen(true),
-            props.setwaitingfordriver(false);
-        }}
-        className="p-3 text-center w-[93%] absolute top-0"
-      >
-        <i className="ri-arrow-down-wide-line text-3xl text-gray-400"></i>
-      </h5>
-      <div>
-        {/* <h4
-          onClick={() => {
-            props.setvechiclepanelopen(false);
-          }}
-          className="p-1 text-center w-[93%] absolute top-0 "
-        >
-          <i className="ri-arrow-down-wide-line text-3xl text-gray-400"></i>
-        </h4> */}
+    <div className="h-screen">
+        <Link  to="/home" className="fixed block right-2 top-2 h-10 w-10 bg-white flex items-center justify-center rounded-full ">
+            <i className="text-lg font-medium ri-home-4-line"></i>
+        </Link>
+      <div className="h-1/2">
+        <img
+          className="h-full w-full object-cover"
+          src="https://miro.medium.com/v2/resize:fit:1400/0*gwMx05pqII5hbfmX.gif"
+          alt="Map"
+        />
+      </div>
+      <div className="h-1/2 p-4">
         <div className="flex items-center justify-between">
           <img
             className="h-12 "
@@ -36,7 +29,7 @@ const WaitForDriver = (props) => {
         </div>
         <div className="flex gap-2 flex-col justify-between items-center">
           <div className="w-full mt-5 ">
-            <div className="flex items-center gap-5 p-3 border-b-2">
+            {/* <div className="flex items-center gap-5 p-3 border-b-2">
               <i className="ri-map-pin-fill"></i>
               <div>
                 <h3 className="text-lg font-medium">562/11/A</h3>
@@ -44,7 +37,7 @@ const WaitForDriver = (props) => {
                   Kamkariyatalab,Bhopal
                 </p>
               </div>
-            </div>
+            </div> */}
             <div className="flex items-center gap-5 p-3 border-b-2">
               {" "}
               <i class="ri-map-pin-fill"></i>
@@ -68,9 +61,14 @@ const WaitForDriver = (props) => {
             Confirm
           </button> */}
         </div>
+       <div className="flex items-center justify-center">
+         <button className="w-full mt-9 bg-green-600 text-white font-semibold p-2 rounded-lg">
+          Confirm
+        </button>
+       </div>
       </div>
     </div>
   );
 };
 
-export default WaitForDriver;
+export default Riding;

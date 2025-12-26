@@ -1,13 +1,16 @@
-import React from "react";
+import React from 'react';
 
-const Confirmride = (props) => {
+const Ridepopup = (props) => {
   return (
     <div>
-      <h5
-        onClick={() => {
-          props.setvechiclepanelopen(false),
-            props.setformpanelopen(true),
-            props.setconfirmridepanel(false);
+         <h5
+        // onClick={() => {
+        //   props.setvechiclepanelopen(false),
+        //     props.setformpanelopen(true),
+        //     props.setconfirmridepanel(false);
+        // }}
+        onClick={()=>{
+            props.setridepopuppanel(false)
         }}
         className="p-3 text-center w-[93%] absolute top-0"
       >
@@ -22,13 +25,20 @@ const Confirmride = (props) => {
         >
           <i className="ri-arrow-down-wide-line text-3xl text-gray-400"></i>
         </h4> */}
-        <h3 className="text-2xl font-semibold mb-3">Confirm your ride</h3>
+        <h3 className="text-2xl font-medium mb-3">New Ride Available!</h3>
+        <div className='flex items-center justify-between p-3 bg-yellow-400 rounded-lg mt-4'>
+            <div className='flex items-center gap-3 '>
+                <img className='h-12 w-12 rounded-full object-cover' src="https://wallpapers.com/images/file/beautiful-woman-with-random-people-in-background-roumbpovzh5jzxj5.jpg" alt="" />
+                <h2 className='text-lg font-medium'>Komal Patil</h2>
+            </div>
+            <h2 className='text-lg font-semibold '>2.2 KM</h2>
+        </div>
         <div className="flex gap-2 flex-col justify-between items-center">
-          <img
+          {/* <img
             className="h-20 "
             src="https://www.pngplay.com/wp-content/uploads/8/Uber-PNG-Photos.png"
             alt=""
-          />
+          /> */}
           <div className="w-full mt-5 ">
             <div className="flex items-center gap-5 p-3 border-b-2">
               <i className="ri-map-pin-fill"></i>
@@ -60,17 +70,26 @@ const Confirmride = (props) => {
               </div>
             </div>
           </div>
-          <button onClick={()=>{
-            props.setvechiclefound(true),
-            props.setconfirmridepanel(false),
-             props.setvechiclepanelopen(false)
-          }} className="w-full mt-5 text-lg bg-green-600 text-white font-semibold p-2 rounded-lg">
-            Confirm
+            <div className=' mt-5 w-full flex items-center justify-between'>
+                 <button onClick={()=>{
+             props.setridepopuppanel(false)
+          }} className=" mt-1 bg-gray-300 text-black  font-semibold p-3 px-10 rounded-lg">
+            Ignore 
           </button>
+                 <button onClick={()=>{
+            props.setconfirmridepopuppanel(true)
+            //  props.setvechiclepanelopen(false)
+            //  props.setconfirmridepanel(true)
+          }} className=" bg-green-600 text-white font-semibold p-3 px-10 rounded-lg">
+            Accept
+          </button>
+          
+          
+            </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default Confirmride;
+export default Ridepopup;
